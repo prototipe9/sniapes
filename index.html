@@ -1672,8 +1672,8 @@
         <p class="text-base font-semibold text-t-primary/50 truncate">
           <span class="text-accent-500">
             
-              <span x-text="appCurrency.format(75.00, 'USD')">
-                $75.00
+              <span x-text="appCurrency.format(90.00, 'USD')">
+                $90.00
               </span>
             
           </span>
@@ -1689,7 +1689,7 @@
         <p class="text-base text-t-primary/50">
           
             
-              38 In Stock
+              <span data-stock-key="1" data-stock-base="38">38</span> In Stock
             
           
         </p>
@@ -1745,7 +1745,7 @@
         <p class="text-base text-t-primary/50">
           
             
-              41 In Stock
+              <span data-stock-key="3" data-stock-base="41">41</span> In Stock
             
           
         </p>
@@ -1801,7 +1801,7 @@
         <p class="text-base text-t-primary/50">
           
             
-              13 In Stock
+              <span data-stock-key="5" data-stock-base="13">13</span> In Stock
             
           
         </p>
@@ -1896,8 +1896,8 @@
         <p class="text-base font-semibold text-t-primary/50 truncate">
           <span class="text-accent-500">
             
-              <span x-text="appCurrency.format(75.00, 'USD')">
-                $75.00
+              <span x-text="appCurrency.format(90.00, 'USD')">
+                $90.00
               </span>
             
           </span>
@@ -1913,7 +1913,7 @@
         <p class="text-base text-t-primary/50">
           
             
-              38 In Stock
+              <span data-stock-key="1" data-stock-base="38">38</span> In Stock
             
           
         </p>
@@ -1969,7 +1969,7 @@
         <p class="text-base text-t-primary/50">
           
             
-             41 In Stock
+             <span data-stock-key="3" data-stock-base="41">41</span> In Stock
             
           
         </p>
@@ -2025,7 +2025,7 @@
         <p class="text-base text-t-primary/50">
           
             
-            13 In Stock
+            <span data-stock-key="5" data-stock-base="13">13</span> In Stock
             
           
         </p>
@@ -2502,6 +2502,58 @@
         },
         "retina_detect": true
       });
+    </script>
+    <script>
+      (function () {
+        const stockBounds = {
+          "1": { min: 20, max: 60 },
+          "3": { min: 25, max: 70 },
+          "5": { min: 8, max: 30 }
+        };
+        const stockNodes = document.querySelectorAll("[data-stock-key]");
+        if (!stockNodes.length) return;
+
+        const groups = new Map();
+        stockNodes.forEach((node) => {
+          const key = node.getAttribute("data-stock-key");
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(node);
+        });
+
+        const state = {};
+        groups.forEach((nodes, key) => {
+          const base = parseInt(nodes[0].getAttribute("data-stock-base"), 10);
+          const bounds = stockBounds[key] || { min: Math.max(1, base - 10), max: base + 10 };
+          const initial = Number.isFinite(base) ? base : bounds.min;
+          state[key] = {
+            min: bounds.min,
+            max: bounds.max,
+            value: Math.min(bounds.max, Math.max(bounds.min, initial))
+          };
+        });
+
+        const render = (key) => {
+          const value = state[key].value;
+          groups.get(key).forEach((node) => {
+            node.textContent = String(value);
+          });
+        };
+
+        const UPDATE_INTERVAL_MS = 2 * 60 * 60 * 1000; // 2 hours
+
+        const tick = () => {
+          Object.keys(state).forEach((key) => {
+            const move = Math.floor(Math.random() * 3) - 1;
+            if (move === 0) return;
+            const next = state[key].value + move;
+            state[key].value = Math.min(state[key].max, Math.max(state[key].min, next));
+            render(key);
+          });
+        };
+
+        Object.keys(state).forEach(render);
+        window.setInterval(tick, UPDATE_INTERVAL_MS);
+      })();
     </script>
 
     
